@@ -5,7 +5,7 @@ COPY inventory-service/pom.xml inventory-service/
 COPY inventory-service/src inventory-service/src
 RUN mvn clean package -DskipTests -pl inventory-service
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/inventory-service/target/inventory-service-1.0.0.jar app.jar
 EXPOSE 8086

@@ -5,7 +5,7 @@ COPY eureka-server/pom.xml eureka-server/
 COPY eureka-server/src eureka-server/src
 RUN mvn clean package -DskipTests -pl eureka-server
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/eureka-server/target/eureka-server-1.0.0.jar app.jar
 EXPOSE 8761

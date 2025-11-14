@@ -5,7 +5,7 @@ COPY quotation-service/pom.xml quotation-service/
 COPY quotation-service/src quotation-service/src
 RUN mvn clean package -DskipTests -pl quotation-service
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/quotation-service/target/quotation-service-1.0.0.jar app.jar
 EXPOSE 8083

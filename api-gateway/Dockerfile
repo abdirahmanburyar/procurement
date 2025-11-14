@@ -5,7 +5,7 @@ COPY api-gateway/pom.xml api-gateway/
 COPY api-gateway/src api-gateway/src
 RUN mvn clean package -DskipTests -pl api-gateway
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/api-gateway/target/api-gateway-1.0.0.jar app.jar
 EXPOSE 8080

@@ -5,7 +5,7 @@ COPY purchase-order-service/pom.xml purchase-order-service/
 COPY purchase-order-service/src purchase-order-service/src
 RUN mvn clean package -DskipTests -pl purchase-order-service
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/purchase-order-service/target/purchase-order-service-1.0.0.jar app.jar
 EXPOSE 8085
