@@ -49,7 +49,8 @@ public class PurchaseOrderService {
 
                 // Calculate total price
                 if (item.getQuantity() != null && item.getUnitPrice() != null) {
-                    item.setTotalPrice(item.getQuantity().multiply(item.getUnitPrice()));
+                    BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
+                    item.setTotalPrice(quantity.multiply(item.getUnitPrice()));
                     total = total.add(item.getTotalPrice());
                 }
 
