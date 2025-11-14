@@ -70,7 +70,8 @@ public class AuthService {
         user.setActive(true);
 
         // Assign default role if exists
-        roleRepository.findByName("USER").ifPresent(role -> user.getRoles().add(role));
+        final User finalUser = user;
+        roleRepository.findByName("USER").ifPresent(role -> finalUser.getRoles().add(role));
 
         user = userRepository.save(user);
 
