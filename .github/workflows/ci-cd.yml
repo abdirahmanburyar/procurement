@@ -9,8 +9,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_PREFIX: ${{ github.repository_owner }}/procurement
-  MAIL_USERNAME: buryar313@gmail.com
-  MAIL_FROM: buryar313@gmail.com
 
 jobs:
   build:
@@ -315,26 +313,4 @@ jobs:
           echo ""
           echo "=== Events ==="
           kubectl get events -n procurement --sort-by='.lastTimestamp' | tail -20
-
-      - name: Send email notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: 'CI/CD Pipeline: Deployment ${{ job.status }}'
-          to: buryar313@gmail.com
-          from: buryar313@gmail.com
-          body: |
-            <h2>CI/CD Pipeline Status: ${{ job.status }}</h2>
-            <p><strong>Repository:</strong> ${{ github.repository }}</p>
-            <p><strong>Branch:</strong> ${{ github.ref }}</p>
-            <p><strong>Commit:</strong> ${{ github.sha }}</p>
-            <p><strong>Author:</strong> ${{ github.actor }}</p>
-            <p><strong>Workflow:</strong> ${{ github.workflow }}</p>
-            <p><strong>Run ID:</strong> ${{ github.run_id }}</p>
-            <p><a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Details</a></p>
-          content_type: text/html
 
