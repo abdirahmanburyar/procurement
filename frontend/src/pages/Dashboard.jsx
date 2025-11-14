@@ -44,61 +44,25 @@ const Dashboard = () => {
               Dashboard
             </h2>
             <p className="text-gray-600 mb-6">
-              Welcome to the Procurement System Dashboard
+              Welcome to the Authentication Service Dashboard
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Enquiries
+                  User Management
                 </h3>
                 <p className="text-gray-600">
-                  Manage procurement enquiries and supplier requests
+                  Manage users, roles, and permissions
                 </p>
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Quotations
+                  Authentication
                 </h3>
                 <p className="text-gray-600">
-                  View and manage supplier quotations
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Purchase Orders
-                </h3>
-                <p className="text-gray-600">
-                  Create and track purchase orders
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Inventory
-                </h3>
-                <p className="text-gray-600">
-                  Manage inventory across multiple locations
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Suppliers
-                </h3>
-                <p className="text-gray-600">
-                  Manage supplier information
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Reports
-                </h3>
-                <p className="text-gray-600">
-                  View procurement reports and analytics
+                  View authentication logs and sessions
                 </p>
               </div>
             </div>

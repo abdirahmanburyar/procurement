@@ -31,10 +31,6 @@
         <module>config-server</module>
         <module>api-gateway</module>
         <module>auth-service</module>
-        <module>procurement-service</module>
-        <module>quotation-service</module>
-        <module>purchase-order-service</module>
-        <module>inventory-service</module>
     </modules>
 
     <dependencyManagement>

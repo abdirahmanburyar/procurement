@@ -51,6 +51,25 @@ services:
       timeout: 10s
       retries: 5
 
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-procurement_auth_db}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - procurement-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   auth-service:
     build:
       context: .
@@ -61,89 +80,18 @@ services:
     depends_on:
       - eureka-server
       - config-server
+      - postgres
     networks:
       - procurement-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=${AUTH_DB_URL:-jdbc:postgresql://localhost:5432/procurement_auth_db}
-      - SPRING_DATASOURCE_USERNAME=${AUTH_DB_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${AUTH_DB_PASSWORD:-postgres}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/procurement_auth_db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - JWT_SECRET=${JWT_SECRET:-your-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm}
 
-  procurement-service:
-    build:
-      context: .
-      dockerfile: procurement-service/Dockerfile
-    container_name: procurement-service
-    ports:
-      - "8082:8082"
-    depends_on:
-      - eureka-server
-      - config-server
-      - auth-service
-    networks:
-      - procurement-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=${PROCUREMENT_DB_URL:-jdbc:postgresql://localhost:5432/procurement_procurement_db}
-      - SPRING_DATASOURCE_USERNAME=${PROCUREMENT_DB_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${PROCUREMENT_DB_PASSWORD:-postgres}
-
-  quotation-service:
-    build:
-      context: .
-      dockerfile: quotation-service/Dockerfile
-    container_name: quotation-service
-    ports:
-      - "8083:8083"
-    depends_on:
-      - eureka-server
-      - config-server
-      - procurement-service
-    networks:
-      - procurement-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=${QUOTATION_DB_URL:-jdbc:postgresql://localhost:5432/procurement_quotation_db}
-      - SPRING_DATASOURCE_USERNAME=${QUOTATION_DB_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${QUOTATION_DB_PASSWORD:-postgres}
-
-  purchase-order-service:
-    build:
-      context: .
-      dockerfile: purchase-order-service/Dockerfile
-    container_name: purchase-order-service
-    ports:
-      - "8085:8085"
-    depends_on:
-      - eureka-server
-      - config-server
-      - quotation-service
-    networks:
-      - procurement-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=${PO_DB_URL:-jdbc:postgresql://localhost:5432/procurement_po_db}
-      - SPRING_DATASOURCE_USERNAME=${PO_DB_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${PO_DB_PASSWORD:-postgres}
-
-  inventory-service:
-    build:
-      context: .
-      dockerfile: inventory-service/Dockerfile
-    container_name: inventory-service
-    ports:
-      - "8086:8086"
-    depends_on:
-      - eureka-server
-      - config-server
-    networks:
-      - procurement-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=${INVENTORY_DB_URL:-jdbc:postgresql://localhost:5432/procurement_inventory_db}
-      - SPRING_DATASOURCE_USERNAME=${INVENTORY_DB_USERNAME:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${INVENTORY_DB_PASSWORD:-postgres}
+volumes:
+  postgres-data:
 
 networks:
   procurement-network:
