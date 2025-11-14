@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+        - id: procurement-service
+          uri: lb://procurement-service
+          predicates:
+            - Path=/enquiries/**,/suppliers/**
+          filters:
+            - RewritePath=/enquiries/(?<segment>.*), /enquiries/$\{segment}
+            - RewritePath=/suppliers/(?<segment>.*), /suppliers/$\{segment}
+        - id: quotation-service
+          uri: lb://quotation-service
+          predicates:
+            - Path=/quotations/**
+          filters:
+            - StripPrefix=0
+        - id: purchase-order-service
+          uri: lb://purchase-order-service
+          predicates:
+            - Path=/pos/**
+          filters:
+            - StripPrefix=0
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/stock/**,/locations/**
+          filters:
+            - RewritePath=/stock/(?<segment>.*), /stock/$\{segment}
+            - RewritePath=/locations/(?<segment>.*), /locations/$\{segment}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret: your-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+

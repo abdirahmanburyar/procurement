@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-init
+spec:
+  template:
+    spec:
+      containers:
+      - name: init-databases
+        image: postgres:15-alpine
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          until PGPASSWORD=$POSTGRES_PASSWORD psql -h postgresql -U $POSTGRES_USER -d postgres -c '\q'; do
+            echo "PostgreSQL is unavailable - sleeping"
+            sleep 2
+          done
+          echo "PostgreSQL is up - executing init script"
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h postgresql -U $POSTGRES_USER <<-EOSQL
+            SELECT 'CREATE DATABASE procurement_auth_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'procurement_auth_db')\gexec
+            SELECT 'CREATE DATABASE procurement_procurement_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'procurement_procurement_db')\gexec
+            SELECT 'CREATE DATABASE procurement_quotation_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'procurement_quotation_db')\gexec
+            SELECT 'CREATE DATABASE procurement_po_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'procurement_po_db')\gexec
+            SELECT 'CREATE DATABASE procurement_inventory_db' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'procurement_inventory_db')\gexec
+          EOSQL
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresql-secret
+              key: postgres-password
+      restartPolicy: OnFailure
+
