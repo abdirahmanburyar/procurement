@@ -16,9 +16,8 @@ echo ""
 echo "📦 Creating namespace..."
 kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
-# Update image references
-echo "🔄 Updating image references..."
-find k8s/services -name "*.yaml" -exec sed -i.bak "s|ghcr.io/YOUR_USERNAME|$REGISTRY|g" {} \;
+# Update image references (already updated to abdirahmanburyar, just update version)
+echo "🔄 Updating image versions..."
 find k8s/services -name "*.yaml" -exec sed -i.bak "s|:latest|:$VERSION|g" {} \;
 
 # Deploy PostgreSQL

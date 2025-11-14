@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: quotation-service
-        image: ghcr.io/YOUR_USERNAME/procurement-quotation-service:latest
+        image: ghcr.io/abdirahmanburyar/procurement-quotation-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8083

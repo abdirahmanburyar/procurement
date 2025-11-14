@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: ghcr.io/YOUR_USERNAME/procurement-api-gateway:latest
+        image: ghcr.io/abdirahmanburyar/procurement-api-gateway:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

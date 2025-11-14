@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: procurement-service
-        image: ghcr.io/YOUR_USERNAME/procurement-procurement-service:latest
+        image: ghcr.io/abdirahmanburyar/procurement-procurement-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8082

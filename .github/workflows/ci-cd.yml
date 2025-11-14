@@ -226,6 +226,11 @@ jobs:
         run: |
           kubectl apply -f k8s/config/ -n procurement
 
+      - name: Update image tags in manifests
+        run: |
+          # Update image tags to use commit SHA instead of latest
+          find k8s/services -name "*.yaml" -exec sed -i "s|:latest|:${{ github.sha }}|g" {} \;
+      
       - name: Apply microservices deployments
         run: |
           kubectl apply -f k8s/services/ -n procurement

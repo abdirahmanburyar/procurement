@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: inventory-service
-        image: ghcr.io/YOUR_USERNAME/procurement-inventory-service:latest
+        image: ghcr.io/abdirahmanburyar/procurement-inventory-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8086

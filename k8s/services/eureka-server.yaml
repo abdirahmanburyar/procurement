@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: eureka-server
-        image: ghcr.io/YOUR_USERNAME/procurement-eureka-server:latest
+        image: ghcr.io/abdirahmanburyar/procurement-eureka-server:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8761

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: purchase-order-service
-        image: ghcr.io/YOUR_USERNAME/procurement-purchase-order-service:latest
+        image: ghcr.io/abdirahmanburyar/procurement-purchase-order-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8085
