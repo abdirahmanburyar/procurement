@@ -12,6 +12,8 @@ spec:
       labels:
         app: frontend
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: frontend
         image: ghcr.io/abdirahmanburyar/procurement-frontend:latest

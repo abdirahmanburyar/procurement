@@ -12,6 +12,8 @@ spec:
       labels:
         app: inventory-service
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: inventory-service
         image: ghcr.io/abdirahmanburyar/procurement-inventory-service:latest

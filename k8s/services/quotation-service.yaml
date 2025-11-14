@@ -12,6 +12,8 @@ spec:
       labels:
         app: quotation-service
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: quotation-service
         image: ghcr.io/abdirahmanburyar/procurement-quotation-service:latest

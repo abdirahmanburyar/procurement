@@ -12,6 +12,8 @@ spec:
       labels:
         app: config-server
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: config-server
         image: ghcr.io/abdirahmanburyar/procurement-config-server:latest

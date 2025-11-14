@@ -12,6 +12,8 @@ spec:
       labels:
         app: eureka-server
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: eureka-server
         image: ghcr.io/abdirahmanburyar/procurement-eureka-server:latest

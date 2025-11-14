@@ -12,6 +12,8 @@ spec:
       labels:
         app: auth-service
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: auth-service
         image: ghcr.io/abdirahmanburyar/procurement-auth-service:latest

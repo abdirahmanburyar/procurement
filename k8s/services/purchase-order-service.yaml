@@ -12,6 +12,8 @@ spec:
       labels:
         app: purchase-order-service
     spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull-secret
       containers:
       - name: purchase-order-service
         image: ghcr.io/abdirahmanburyar/procurement-purchase-order-service:latest
