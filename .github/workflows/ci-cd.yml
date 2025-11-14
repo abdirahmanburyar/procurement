@@ -206,6 +206,9 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
           export KUBECONFIG=./kubeconfig
+          # Verify connection to VPS
+          kubectl cluster-info
+          kubectl get nodes
 
       - name: Create namespace
         run: |
