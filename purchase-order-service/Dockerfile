@@ -1,9 +1,16 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
+COPY eureka-server/pom.xml eureka-server/
+COPY config-server/pom.xml config-server/
+COPY api-gateway/pom.xml api-gateway/
+COPY auth-service/pom.xml auth-service/
+COPY procurement-service/pom.xml procurement-service/
+COPY quotation-service/pom.xml quotation-service/
 COPY purchase-order-service/pom.xml purchase-order-service/
+COPY inventory-service/pom.xml inventory-service/
 COPY purchase-order-service/src purchase-order-service/src
-RUN mvn clean package -DskipTests -pl purchase-order-service
+RUN mvn clean package -DskipTests -pl purchase-order-service -am
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
