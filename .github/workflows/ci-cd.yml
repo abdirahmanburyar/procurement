@@ -242,12 +242,15 @@ jobs:
 
       - name: Create GitHub Container Registry secret
         run: |
+          # Delete existing secret if it exists (to avoid conflicts)
+          kubectl delete secret ghcr-image-pull-secret -n procurement --ignore-not-found=true
+          
+          # Create docker-registry secret
           kubectl create secret docker-registry ghcr-image-pull-secret \
             --docker-server=ghcr.io \
             --docker-username=${{ github.actor }} \
             --docker-password=${{ secrets.GITHUB_TOKEN }} \
-            --namespace=procurement \
-            --dry-run=client -o yaml | kubectl apply -f -
+            --namespace=procurement
         env:
           KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
