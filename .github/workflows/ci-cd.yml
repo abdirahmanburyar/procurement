@@ -214,16 +214,14 @@ jobs:
             echo "Please update your kubeconfig on the VPS and re-encode it"
           fi
           
-          export KUBECONFIG=$(pwd)/kubeconfig
           chmod 600 kubeconfig
           
           # Verify connection to VPS
           echo "Verifying kubectl connection..."
-          echo "Current KUBECONFIG: $KUBECONFIG"
           echo "Config file contents (server URL):"
           grep -A 2 "server:" kubeconfig || echo "No server found in config"
           
-          kubectl cluster-info || {
+          KUBECONFIG=$(pwd)/kubeconfig kubectl cluster-info || {
             echo "ERROR: Failed to connect to Kubernetes cluster!"
             echo "Please verify:"
             echo "1. KUBECONFIG secret is correctly base64 encoded"
@@ -231,11 +229,16 @@ jobs:
             echo "3. k3s is running on your VPS"
             exit 1
           }
-          kubectl get nodes
+          KUBECONFIG=$(pwd)/kubeconfig kubectl get nodes
+          
+          # Save KUBECONFIG path for subsequent steps
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
 
       - name: Create namespace
         run: |
           kubectl create namespace procurement --dry-run=client -o yaml | kubectl apply -f -
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Create GitHub Container Registry secret
         run: |
@@ -245,18 +248,26 @@ jobs:
             --docker-password=${{ secrets.GITHUB_TOKEN }} \
             --namespace=procurement \
             --dry-run=client -o yaml | kubectl apply -f -
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Apply PostgreSQL StatefulSet
         run: |
           kubectl apply -f k8s/postgresql/ -n procurement
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Wait for PostgreSQL to be ready
         run: |
           kubectl wait --for=condition=ready pod -l app=postgresql -n procurement --timeout=300s || echo "PostgreSQL may still be starting"
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Apply ConfigMaps and Secrets
         run: |
           kubectl apply -f k8s/config/ -n procurement
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Update image tags in manifests
         run: |
@@ -266,14 +277,20 @@ jobs:
       - name: Apply microservices deployments
         run: |
           kubectl apply -f k8s/services/ -n procurement
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Apply Ingress
         run: |
           kubectl apply -f k8s/ingress/ -n procurement
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
       - name: Wait for deployments
         run: |
           kubectl wait --for=condition=available --timeout=600s deployment --all -n procurement || echo "Some deployments may still be starting"
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
       
       - name: Show deployment status
         run: |
@@ -285,4 +302,6 @@ jobs:
           echo ""
           echo "=== Events ==="
           kubectl get events -n procurement --sort-by='.lastTimestamp' | tail -20
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
