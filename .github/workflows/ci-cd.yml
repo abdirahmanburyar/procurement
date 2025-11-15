@@ -272,6 +272,16 @@ jobs:
         env:
           KUBECONFIG: ${{ github.workspace }}/kubeconfig
 
+      - name: Fix all secrets (ensure they exist)
+        run: |
+          chmod +x scripts/fix-all-secrets-non-interactive.sh
+          NAMESPACE=procurement \
+          GITHUB_USER=${{ github.actor }} \
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
+          ./scripts/fix-all-secrets-non-interactive.sh
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
+
       - name: Update image tags in manifests
         run: |
           # Update image tags to use commit SHA instead of latest
